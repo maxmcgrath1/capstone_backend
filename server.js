@@ -1,14 +1,11 @@
-// DEPENDENCIES //
 require("dotenv").config();
 const { PORT = 3000, MONGODB_URL } = process.env;
 const express = require("express");
-const cors = require("cors");
-const mongoose = require("mongoose");
-
-// SET APP //
 const app = express();
+const mongoose = require("mongoose");
+const cors = require("cors");
+const morgan = require("morgan")
 
-// DB CONNECTION // 
 mongoose.connect(MONGODB_URL, {
     useUnifiedTopology: true,
     useNewUrlParser: true,
@@ -18,13 +15,38 @@ mongoose.connection
     .on("close", () => console.log("Your are disconnected from mongoose"))
     .on("error", (error) => console.log(error));
 
-// MIDDLEWARE //
+const GameSchema = new mongoose.Schema({
+        name: String,
+        image: String,
+        description: String,
+});
+
+const Game = mongoose.model("Game", GameSchema);
+
 app.use(cors());
+app.use(morgan("dev"));
+app.use(express.json());
 
 // ROUTES //
 app.get("/", (req, res) => {
     res.send("IT'S CAPSTONE TIME");
 });
 
-// LISTENER //
+app.get("/games", async (req, res) => {
+    try {
+        res.json(await Game.find({}));
+    } catch (error) {
+        res.status(400).json(error)
+    }
+});
+
+app.post("/games", async (req, res) => {
+    try {
+        res.json(await Game.create(req.body));
+    } catch (error) {
+        res.status(400).json(error);
+    }
+});
+
+
 app.listen(PORT, () => console.log(`listening on PORT ${PORT}`));
