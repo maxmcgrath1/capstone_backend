@@ -48,5 +48,24 @@ app.post("/games", async (req, res) => {
     }
 });
 
+app.put("/games/:id", async (req, res) => {
+    try {
+        res.json(
+            await Game.findByIdAndUpdate(req.params.id, req.body, { new: true })
+        );
+    } catch (error) {
+        res.status(400).json(error);
+    }
+});
+
+app.delete("/games/:id", async (req, res) => {
+    try {
+        res.json(await Game.findByIdAndRemove(req.params.id));
+    } catch (error) {
+        res.status(400).json(error);
+    }
+});
+
+
 
 app.listen(PORT, () => console.log(`listening on PORT ${PORT}`));
