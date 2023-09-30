@@ -35,13 +35,13 @@ app.get("/", (req, res) => {
     res.send("IT'S CAPSTONE TIME");
 });
 
-// app.get("/games", async (req, res) => {
-//     try {
-//         res.json(await Game.find({}));
-//     } catch (error) {
-//         res.status(400).json(error)
-//     }
-// });
+app.get("/games", async (req, res) => {
+    try {
+        res.json(await Game.find({}));
+    } catch (error) {
+        res.status(400).json(error)
+    }
+});
 
 // app.post("/games", async (req, res) => {
 //     try {
